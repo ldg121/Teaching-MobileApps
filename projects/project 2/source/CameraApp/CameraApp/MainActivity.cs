@@ -4,7 +4,7 @@ namespace CameraApp
 {
 
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Generic; 
     using Android.App;
     using Android.Content;
     using Android.Content.PM;
@@ -15,6 +15,8 @@ namespace CameraApp
     using Java.IO;
     using Environment = Android.OS.Environment;
     using Uri = Android.Net.Uri;
+
+
     //creating a new static class with variables
     //do no forget to give permission to app to access external memory
     //and camera in manifest
@@ -32,14 +34,33 @@ namespace CameraApp
         private ImageView _imageView;
 
 
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            // Make it available in the gallery
 
-        //after class is created and permissions are given we need to update this OnCreate
-        //function 
+            base.OnActivityResult(requestCode, resultCode, data);
 
-        //I believe this code here checks to see if there is an app to take pictures
-        //which is a way to check to see if there is a camera on the device. 
+            Intent mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
+            Uri contentUri = Uri.FromFile(App._file);
+            mediaScanIntent.SetData(contentUri);
+            SendBroadcast(mediaScanIntent);
 
-        protected override void OnCreate(Bundle bundle)
+            int height = Resources.DisplayMetrics.HeightPixels;
+            int width = _imageView.Height;
+            App.bitmap = App._file.Path.LoadAndResizeBitmap(width, height);
+            if (App.bitmap != null)
+            {
+                _imageView.SetImageBitmap(App.bitmap);
+                App.bitmap = null;
+            }
+        }
+    //after class is created and permissions are given we need to update this OnCreate
+    //function 
+
+    //I believe this code here checks to see if there is an app to take pictures
+    //which is a way to check to see if there is a camera on the device. 
+
+    protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             // Set our view from the "main" layout resource
@@ -94,6 +115,7 @@ namespace CameraApp
         }
         //Next step is to see where my images are being stored and if not create a view with a gallery. 
         //https://developer.xamarin.com/guides/android/getting_started/hello,android_multiscreen/hello,android_multiscreen_quickstart/
+        //https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/capture-photos-and-video-with-cameracaptureui
 
     }
 
