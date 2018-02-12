@@ -8,6 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Open Camera" />
+    <Button
+        android:text="Choose a photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/GetFromGallery" />
     <ImageView
         android:visibility="invisible"
         android:layout_width="fill_parent"
@@ -15,4 +20,3 @@
         android:id="@+id/takenPictureImageView"
         android:adjustViewBounds="true" />
 </LinearLayout>
-
